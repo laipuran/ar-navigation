@@ -1,23 +1,31 @@
 # AI校园室内精准导航与AR实景指引
 
-面向“AI校园室内精准导航与AR实景指引”赛题的项目。
+从课表上的一个教室名，到真正走到教室门口。
 
-当前处于领域建模阶段：先讨论不含AR的室内导航，依次确定模型、数据schema和测量需求。此前方案文档已删除，未确认的设计不作为实施约定。
+本项目面向武汉大学校园找路场景，希望帮助不熟悉校园的同学弄清教学楼简称、找到合适的入口，并沿楼内走廊和楼梯到达目标教室，而不只是停在地图上的楼栋位置。
 
-## 当前项目
+## 我们想做什么
 
-Monorepo：`frontend/`为Vue 3 + TypeScript + Vite前端，`backend/`为Rust项目。前端暂保留官方模板页面；后端仍为无第三方依赖的模型库，不包含HTTP服务、数据库、序列化格式、图校验器或导航算法。
+- **看懂上课地点**：将课表里的简称、教室编号转成明确的楼栋和房间。
+- **走到教室门口**：把教学楼入口、走廊、楼梯和教室串成一条可走的路线。
+- **在现场看懂指引**：先提供清楚的路线说明，再探索用AR把指引叠加到实景中。
 
-- [`frontend/src/`](frontend/src/)：Vue前端源码。
-- [`backend/src/model.rs`](backend/src/model.rs)：节点、节点变体、双向边及边变体。
-- [`backend/tests/model.rs`](backend/tests/model.rs)：模型构造与属性测试，不替代图约束验证。
-- [`GLOSSARY.md`](GLOSSARY.md)：已确认的领域术语。
+## 当前进展
 
-节点与楼层ID暂使用字符串新类型，不约定编码格式或楼层顺序。边默认双向；Junction按俯视顺时针记录邻居，来路不计入出口序号。
+项目处于早期开发阶段，目前聚焦室内导航的数据建模：怎样描述入口、路口、楼梯和教室，以及它们之间的通行关系。先把“路怎么连、终点在哪”定义清楚，再推进路径规划与交互。
+
+AI对话、室内定位和AR实景指引尚未实现。前端使用Vue 3、TypeScript和Vite；后端使用Rust，目前为领域模型库，尚无可启动的API服务。
+
+后端设计讨论稿分为两部分，均不表示功能已实现：
+
+- [后端内部接口 Spec](docs/specs/backend-internal.md)：进程内查询、算路和工具执行，不使用REST接口。
+- [对外对话接口 Spec](docs/specs/api.md)：仅面向网页对话，消息、会话和响应细节待确认。
+
+## 本地开发
 
 ### 前端
 
-推荐使用Node.js 24 LTS和npm。进入前端目录后执行：
+建议使用Node.js 24 LTS和npm：
 
 ```sh
 cd frontend
@@ -25,7 +33,7 @@ npm install
 npm run dev
 ```
 
-类型检查及构建：
+检查类型并构建：
 
 ```sh
 npm run typecheck
@@ -34,14 +42,10 @@ npm run build
 
 ### 后端
 
-从仓库根目录执行（需要支持Rust 2024 edition的工具链）：
+使用支持Rust 2024 edition的工具链，在仓库根目录运行检查：
 
 ```sh
 cargo test --manifest-path backend/Cargo.toml
 cargo fmt --manifest-path backend/Cargo.toml --check
 cargo clippy --manifest-path backend/Cargo.toml --all-targets -- -D warnings
 ```
-
-后端目前是库，尚无可启动的Web服务。
-
-数据来源已确定为消防图，采用JSON整理拓扑与补测距离；具体schema尚待确认。
