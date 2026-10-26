@@ -1,0 +1,149 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "室内导航数据",
+  "description": "单栋楼的导航节点与无向连接。",
+  "$comment": "节点ID唯一、边引用存在、重复无向边、Junction邻居与实际连接一致、连接类型与节点及楼层匹配等关系约束，需要另行校验。",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["nodes", "edges"],
+  "properties": {
+    "nodes": {
+      "type": "array",
+      "description": "导航节点。",
+      "items": { "$ref": "#/$defs/node" }
+    },
+    "edges": {
+      "type": "array",
+      "description": "双向通行的连接，不重复记录反向边。",
+      "items": { "$ref": "#/$defs/edge" }
+    }
+  },
+  "$defs": {
+    "nonBlankString": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "nodeId": {
+      "description": "节点标识，不限定为UUID。",
+      "$ref": "#/$defs/nonBlankString"
+    },
+    "distance": {
+      "description": "实际行走距离，单位为米，必须为正数且不超出f64有限值范围。",
+      "type": "number",
+      "exclusiveMinimum": 0,
+      "maximum": 1.7976931348623157e308
+    },
+    "node": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "floor_id", "kind"],
+      "properties": {
+        "id": { "$ref": "#/$defs/nodeId" },
+        "floor_id": {
+          "description": "楼层标识，对应Rust的i32。",
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647
+        },
+        "kind": {
+          "oneOf": [
+            { "$ref": "#/$defs/room" },
+            { "$ref": "#/$defs/gate" },
+            { "$ref": "#/$defs/stairs" },
+            { "$ref": "#/$defs/junction" }
+          ]
+        }
+      }
+    },
+    "room": {
+      "description": "房间前门外的到达点。",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "name"],
+      "properties": {
+        "type": { "const": "room" },
+        "name": {
+          "description": "用于展示和搜索的房间名称，不要求唯一。",
+          "$ref": "#/$defs/nonBlankString"
+        }
+      }
+    },
+    "gate": {
+      "description": "入口到达点。",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "description"],
+      "properties": {
+        "type": { "const": "gate" },
+        "description": { "$ref": "#/$defs/nonBlankString" }
+      }
+    },
+    "stairs": {
+      "description": "楼梯平台或出入口。",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type"],
+      "properties": {
+        "type": { "const": "stairs" }
+      }
+    },
+    "junction": {
+      "description": "走廊转角或岔路位置。",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "neighbors"],
+      "properties": {
+        "type": { "const": "junction" },
+        "neighbors": {
+          "description": "俯视顺时针排列的相邻节点，仅用于转向指引，不建立连接。首项任意，来路不计入出口序号。",
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/nodeId" }
+        }
+      }
+    },
+    "edge": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["endpoints", "kind"],
+      "properties": {
+        "endpoints": {
+          "description": "两个不同的节点标识，排列顺序不表示通行方向。",
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/nodeId" }
+        },
+        "kind": {
+          "oneOf": [
+            { "$ref": "#/$defs/walk" },
+            { "$ref": "#/$defs/stairFlight" }
+          ]
+        }
+      }
+    },
+    "walk": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "distance_m"],
+      "properties": {
+        "type": { "const": "walk" },
+        "distance_m": { "$ref": "#/$defs/distance" }
+      }
+    },
+    "stairFlight": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "distance_m"],
+      "properties": {
+        "type": { "const": "stair_flight" },
+        "distance_m": {
+          "description": "沿楼梯的行走距离，不是垂直高度。",
+          "$ref": "#/$defs/distance"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "nodes": [
+    {"id": "gate", "floor_id": -1, "kind": {"type": "gate", "description": "另一栋楼的北门"}},
+    {"id": "room", "floor_id": -1, "kind": {"type": "room", "name": "B01"}}
+  ],
+  "edges": [
+    {"endpoints": ["room", "gate"], "kind": {"type": "walk", "distance_m": 7}}
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "json.schemas": [
+    {
+      "fileMatch": ["/data/buildings/*.json"],
+      "url": "./schemas/navigation.schema.json"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "nodes": [
+    {"id": "gate", "floor_id": 1, "kind": {"type": "gate", "description": "教学楼东门"}},
+    {"id": "junction", "floor_id": 1, "kind": {"type": "junction", "neighbors": ["gate", "room", "stairs-1", "room-copy"]}},
+    {"id": "room", "floor_id": 1, "kind": {"type": "room", "name": "101"}},
+    {"id": "room-copy", "floor_id": 1, "kind": {"type": "room", "name": "101"}},
+    {"id": "stairs-1", "floor_id": 1, "kind": {"type": "stairs"}},
+    {"id": "stairs-2", "floor_id": 2, "kind": {"type": "stairs"}},
+    {"id": "upper", "floor_id": 2, "kind": {"type": "room", "name": "201"}},
+    {"id": "isolated", "floor_id": 1, "kind": {"type": "room", "name": "封闭教室"}}
+  ],
+  "edges": [
+    {"endpoints": ["gate", "junction"], "kind": {"type": "walk", "distance_m": 2}},
+    {"endpoints": ["junction", "room"], "kind": {"type": "walk", "distance_m": 3}},
+    {"endpoints": ["junction", "stairs-1"], "kind": {"type": "walk", "distance_m": 4}},
+    {"endpoints": ["junction", "room-copy"], "kind": {"type": "walk", "distance_m": 8}},
+    {"endpoints": ["gate", "room"], "kind": {"type": "walk", "distance_m": 20}},
+    {"endpoints": ["stairs-1", "stairs-2"], "kind": {"type": "stair_flight", "distance_m": 6}},
+    {"endpoints": ["stairs-2", "upper"], "kind": {"type": "walk", "distance_m": 2}}
+  ]
+}
