@@ -1,6 +1,7 @@
 use super::{EdgeKind, FloorId, NodeId};
+use serde::Serialize;
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Serialize)]
 pub struct Route {
     pub distance_m: f64,
     pub path: Vec<NodeId>,
@@ -9,14 +10,15 @@ pub struct Route {
     pub steps: Vec<NavigationStep>,
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Serialize)]
 pub struct RouteLeg {
     pub from: NodeId,
     pub to: NodeId,
     pub kind: EdgeKind,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
+#[serde(tag = "type", rename_all = "snake_case")]
 pub enum JunctionDirection {
     ClockwiseExit {
         number: usize,
@@ -26,7 +28,8 @@ pub enum JunctionDirection {
     UnknownApproach,
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Serialize)]
+#[serde(tag = "type", rename_all = "snake_case")]
 pub enum NavigationStep {
     Junction {
         at: NodeId,

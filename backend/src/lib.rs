@@ -2,5 +2,8 @@
 
 #![doc = include_str!("../README.md")]
 
+pub mod assistant;
+pub mod http;
 pub mod model;
 pub mod navigation;
+pub mod telemetry;

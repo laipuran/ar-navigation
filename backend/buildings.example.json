@@ -1,0 +1,7 @@
+[
+  {
+    "id": "demo",
+    "name": "演示楼（合成测试数据，非真实校园）",
+    "path": "tests/fixtures/teaching-a.json"
+  }
+]
