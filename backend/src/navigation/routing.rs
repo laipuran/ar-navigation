@@ -47,6 +47,7 @@ pub(super) fn shortest_path(
             Ok(None)
         };
     }
+    
     let mut indices = vec![end];
     let mut legs = Vec::new();
     let mut cursor = end;
