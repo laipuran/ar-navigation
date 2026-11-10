@@ -1,0 +1,109 @@
+<!-- result.wxml：地点解析结果页 -->
+<!-- 注意：wx:if 和 wx:else 必须是紧挨着的兄弟节点，中间不能隔标签 -->
+<!-- 所以要"二选一"时，用 block 标签把每组内容包起来，block 不产生任何实体节点 -->
+
+<view class="page">
+
+  <!-- ========== 情况一：查到了 ========== -->
+  <block wx:if="{{result}}">
+
+    <!-- 顶部：把"黑话"翻译成大白话 -->
+    <view class="hero">
+      <text class="hero-label">你输入的是</text>
+      <text class="hero-raw">{{raw}}</text>
+      <view class="hero-divider"></view>
+      <text class="hero-title">{{result.titleText}}</text>
+      <text class="hero-sub">{{result.campus}} · {{result.floorText}}</text>
+    </view>
+
+    <!-- 信息卡：三列网格 -->
+    <view class="card">
+      <view class="card-title">地点信息</view>
+      <view class="grid">
+        <view class="grid-item">
+          <text class="grid-label">校区</text>
+          <text class="grid-value">{{result.campus}}</text>
+        </view>
+        <view class="grid-item">
+          <text class="grid-label">楼层</text>
+          <text class="grid-value">{{result.floorText}}</text>
+        </view>
+        <view class="grid-item">
+          <text class="grid-label">房间</text>
+          <text class="grid-value">{{result.roomText}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 路线卡：三步 -->
+    <view class="card">
+      <view class="card-title">建议路线</view>
+
+      <view class="step">
+        <view class="step-index">1</view>
+        <view class="step-body">
+          <text class="step-title">从哪个门进</text>
+          <text class="step-desc">{{result.entrance}}</text>
+        </view>
+      </view>
+
+      <view class="step">
+        <view class="step-index">2</view>
+        <view class="step-body">
+          <text class="step-title">走哪部楼梯</text>
+          <text class="step-desc">{{result.stairs}}</text>
+        </view>
+      </view>
+
+      <view class="step">
+        <view class="step-index">3</view>
+        <view class="step-body">
+          <text class="step-title">到达</text>
+          <text class="step-desc">上到 {{result.floorText}}，找到 {{result.roomText}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 耗时卡：数字要醒目 -->
+    <view class="card time-card">
+      <view class="card-title">耗时建议</view>
+      <view class="time-row">
+        <view class="time-item">
+          <text class="time-num">{{result.walkMin}}</text>
+          <text class="time-unit">分钟 · 步行</text>
+        </view>
+        <view class="time-split"></view>
+        <view class="time-item">
+          <text class="time-num">{{result.bikeMin}}</text>
+          <text class="time-unit">分钟 · 骑行</text>
+        </view>
+      </view>
+      <view class="advice">{{result.advice}}</view>
+      <view class="note">{{result.note}}</view>
+    </view>
+
+    <!-- 操作按钮 -->
+    <view class="actions">
+      <button class="btn-primary" hover-class="pressed" bindtap="onStartNav">开始导航</button>
+      <button class="btn-ghost" hover-class="pressed" bindtap="onStartAR">AR 实景指引</button>
+    </view>
+
+    <view class="footer">
+      <text class="footer-text">示例数据 · 待接入校园 GIS 校正</text>
+    </view>
+
+  </block>
+
+  <!-- ========== 情况二：没查到 ========== -->
+  <block wx:else>
+    <view class="empty-card">
+      <text class="empty-title">还没收录「{{raw}}」</text>
+      <text class="empty-desc">词库里目前只有几个示例地点，可以试试输入：教四-302、教五-101、工主教-405</text>
+    </view>
+
+    <view class="actions">
+      <button class="btn-primary" hover-class="pressed" bindtap="onBack">换个地点试试</button>
+    </view>
+  </block>
+
+</view>

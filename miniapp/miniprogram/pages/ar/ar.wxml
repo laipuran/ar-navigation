@@ -1,0 +1,50 @@
+<!-- ar.wxml：AR 实景指引页 -->
+<!-- camera 全屏做背景，上面盖一层透明 UI（同层渲染，基础库 2.9+ 支持） -->
+
+<view class="page">
+
+  <!-- 相机预览；失败时整块隐藏，走下面的降级分支 -->
+  <camera
+    wx:if="{{!cameraError}}"
+    class="camera"
+    device-position="back"
+    flash="off"
+    binderror="onCameraError"
+  ></camera>
+
+  <!-- 相机启动失败时的降级说明 -->
+  <view class="fallback" wx:if="{{cameraError}}">
+    <text class="fallback-title">相机没能启动</text>
+    <text class="fallback-desc">开发者工具调不起摄像头，这是正常现象。\n点顶部「预览」用手机扫码，就能看到真实的 AR 画面。\n下面的文字与箭头逻辑和真机完全一致。</text>
+  </view>
+
+  <!-- 叠加层：目标、箭头、距离、下一步提示 -->
+  <view class="overlay" wx:if="{{place}}">
+
+    <view class="hud-top">
+      <text class="hud-target">{{place.titleText}}</text>
+      <text class="hud-sub">{{place.campus}} · {{place.floorText}}</text>
+    </view>
+
+    <!-- 箭头：整体旋转，角度由 js 里的 heading 控制 -->
+    <view class="arrow-area">
+      <view class="arrow" style="transform: rotate({{heading}}deg)">
+        <view class="arrow-head"></view>
+        <view class="arrow-stem"></view>
+      </view>
+      <text class="distance">{{distance}} 米</text>
+    </view>
+
+    <view class="hint-card">
+      <text class="hint-label">下一步</text>
+      <text class="hint-text">{{hint}}</text>
+    </view>
+
+    <view class="btn-row">
+      <view class="hud-btn" hover-class="pressed" bindtap="onToggleSim">{{simRunning ? '暂停演示' : '继续演示'}}</view>
+      <view class="hud-btn hud-btn-primary" hover-class="pressed" bindtap="onExit">退出</view>
+    </view>
+
+  </view>
+
+</view>

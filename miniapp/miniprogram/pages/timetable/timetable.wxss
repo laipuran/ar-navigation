@@ -1,0 +1,284 @@
+/* timetable.wxss：课表识别页样式 */
+
+.page {
+  min-height: 100vh;
+  padding: 24rpx 32rpx 60rpx;
+  background-color: #f5f7fa;
+  box-sizing: border-box;
+}
+
+/* ---------- 照片预览 ---------- */
+.preview {
+  position: relative;
+  width: 100%;
+  height: 480rpx;
+  border-radius: 24rpx;
+  overflow: hidden;
+  background-color: #e8e6df;
+}
+
+.preview-img {
+  width: 100%;
+  height: 100%;
+}
+
+.preview-empty {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.preview-empty-text {
+  font-size: 26rpx;
+  color: #888780;
+}
+
+/* 识别中的半透明遮罩 */
+.preview-mask {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 20rpx 0;
+  background-color: rgba(24, 95, 165, 0.85);
+  display: flex;
+  justify-content: center;
+}
+
+.preview-mask-text {
+  font-size: 26rpx;
+  color: #ffffff;
+}
+
+/* ---------- 进度区 ---------- */
+.loading-box {
+  margin-top: 32rpx;
+  padding: 32rpx;
+  background-color: #ffffff;
+  border-radius: 24rpx;
+}
+
+.loading-title {
+  font-size: 30rpx;
+  font-weight: 500;
+  color: #2c2c2a;
+}
+
+.progress-track {
+  margin-top: 24rpx;
+  height: 12rpx;
+  border-radius: 999rpx;
+  background-color: #f1efe8;
+  overflow: hidden;
+}
+
+/* 进度条：宽度由 js 里的 progress 决定 */
+.progress-bar {
+  height: 100%;
+  border-radius: 999rpx;
+  background-color: #185fa5;
+  /* 宽度变化时加个过渡，看起来更顺滑 */
+  transition: width 0.15s linear;
+}
+
+.loading-row {
+  margin-top: 18rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.loading-pct {
+  font-size: 26rpx;
+  color: #185fa5;
+  font-weight: 500;
+}
+
+.loading-tip {
+  font-size: 24rpx;
+  color: #b4b2a9;
+}
+
+/* ---------- 完成后的统计条 ---------- */
+.summary {
+  display: flex;
+  align-items: center;
+  padding: 24rpx;
+  background-color: #ffffff;
+  border-radius: 24rpx;
+}
+
+.summary-img {
+  width: 112rpx;
+  height: 112rpx;
+  border-radius: 16rpx;
+  flex-shrink: 0;
+}
+
+.summary-info {
+  flex: 1;
+  margin-left: 24rpx;
+  display: flex;
+  flex-direction: column;
+}
+
+.summary-title {
+  font-size: 32rpx;
+  font-weight: 500;
+  color: #2c2c2a;
+}
+
+.summary-sub {
+  margin-top: 8rpx;
+  font-size: 24rpx;
+  color: #888780;
+}
+
+/* ---------- 演示数据提示 ---------- */
+.mock-tip {
+  margin-top: 16rpx;
+  padding: 18rpx 24rpx;
+  background-color: #faeeda;
+  border-radius: 16rpx;
+}
+
+.mock-tip-text {
+  font-size: 22rpx;
+  color: #854f0b;
+  line-height: 1.6;
+}
+
+/* ---------- 课程列表 ---------- */
+.card {
+  margin-top: 24rpx;
+  padding: 8rpx 32rpx;
+  background-color: #ffffff;
+  border-radius: 24rpx;
+}
+
+.course-item {
+  display: flex;
+  align-items: center;
+  padding: 28rpx 0;
+  border-bottom: 1rpx solid #f1efe8;
+}
+
+.course-item:last-child {
+  border-bottom: none;
+}
+
+.course-left {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.course-time {
+  font-size: 22rpx;
+  color: #b4b2a9;
+}
+
+.course-name {
+  margin-top: 8rpx;
+  font-size: 30rpx;
+  color: #2c2c2a;
+}
+
+.course-place {
+  margin-top: 10rpx;
+  display: flex;
+  align-items: center;
+}
+
+/* 状态小圆点 */
+.dot {
+  width: 12rpx;
+  height: 12rpx;
+  border-radius: 50%;
+  margin-right: 12rpx;
+  flex-shrink: 0;
+}
+
+.dot-ok {
+  background-color: #185fa5;
+}
+
+.dot-unknown {
+  background-color: #d3d1c7;
+}
+
+.place-text {
+  font-size: 26rpx;
+  color: #2c2c2a;
+}
+
+.place-text-dim {
+  color: #b4b2a9;
+}
+
+/* 别名：告诉用户"这个黑话我们认出来了" */
+.place-alias {
+  margin-left: 12rpx;
+  font-size: 22rpx;
+  color: #888780;
+}
+
+.arrow {
+  font-size: 40rpx;
+  color: #b4b2a9;
+  margin-left: 12rpx;
+}
+
+.arrow-dim {
+  font-size: 22rpx;
+  color: #b4b2a9;
+  margin-left: 12rpx;
+}
+
+/* ---------- 空状态 ---------- */
+.empty-card {
+  padding: 56rpx 32rpx;
+  display: flex;
+  justify-content: center;
+}
+
+.empty-text {
+  font-size: 26rpx;
+  color: #b4b2a9;
+}
+
+/* ---------- 按钮 ---------- */
+.actions {
+  margin-top: 32rpx;
+}
+
+.btn-primary {
+  background-color: #185fa5;
+  color: #ffffff;
+  font-size: 30rpx;
+  border-radius: 20rpx;
+  border: none;
+  line-height: 92rpx;
+  height: 92rpx;
+}
+
+.btn-primary::after {
+  border: none;
+}
+
+.pressed {
+  opacity: 0.6;
+}
+
+.footer {
+  margin-top: 20rpx;
+  display: flex;
+  justify-content: center;
+}
+
+.footer-text {
+  font-size: 22rpx;
+  color: #b4b2a9;
+}

@@ -1,0 +1,19 @@
+/* app.wxss 是全局样式，所有页面共用。适合放：颜色变量、通用卡片、通用按钮 */
+
+/* page 相当于网页里的 body，先定一个整体底色 */
+page {
+  background-color: #f5f7fa;
+  /* 全局字体，小程序里不需要自己引入字体 */
+  font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-size: 28rpx;
+  color: #2c2c2a;
+}
+
+/* 通用白色卡片：所有页面都能用 class="card" 复用 */
+.card {
+  background-color: #ffffff;
+  border-radius: 24rpx;
+  padding: 32rpx;
+  margin: 0 32rpx 24rpx;
+  box-sizing: border-box;
+}

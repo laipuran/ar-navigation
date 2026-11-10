@@ -1,0 +1,13 @@
+{
+  "miniprogramRoot": "miniprogram/",
+  "compileType": "miniprogram",
+  "appid": "gh_a9e07613f3d4",
+  "projectname": "campus-nav",
+  "libVersion": "3.8.0",
+  "setting": {
+    "es6": true,
+    "postcss": true,
+    "minified": true,
+    "urlCheck": true
+  }
+}

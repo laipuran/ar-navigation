@@ -1,0 +1,92 @@
+<!-- timetable.wxml：课表识别页 -->
+<!-- 两个状态二选一：loading 显示进度，done 显示列表 -->
+<!-- 注意 wx:if / wx:else 必须紧挨着，中间用 block 包裹 -->
+
+<view class="page">
+
+  <!-- ========== 状态一：识别中 ========== -->
+  <block wx:if="{{status === 'loading'}}">
+
+    <!-- 用户选的照片，真显示 -->
+    <view class="preview">
+      <image wx:if="{{imagePath}}" class="preview-img" src="{{imagePath}}" mode="aspectFill" />
+      <view wx:else class="preview-empty">
+        <text class="preview-empty-text">没有拿到照片</text>
+      </view>
+      <!-- 半透明遮罩 + "识别中" -->
+      <view class="preview-mask">
+        <text class="preview-mask-text">识别中</text>
+      </view>
+    </view>
+
+    <view class="loading-box">
+      <text class="loading-title">正在识别课表</text>
+      <view class="progress-track">
+        <!-- 进度条宽度用内联样式绑定百分比 -->
+        <view class="progress-bar" style="width: {{progress}}%"></view>
+      </view>
+      <view class="loading-row">
+        <text class="loading-pct">{{progress}}%</text>
+        <text class="loading-tip">提取课程名与地点…</text>
+      </view>
+    </view>
+
+  </block>
+
+  <!-- ========== 状态二：识别完成 ========== -->
+  <block wx:else>
+
+    <!-- 顶部：缩略图 + 统计 -->
+    <view class="summary">
+      <image wx:if="{{imagePath}}" class="summary-img" src="{{imagePath}}" mode="aspectFill" />
+      <view class="summary-info">
+        <text class="summary-title">识别到 {{courses.length}} 门课</text>
+        <text class="summary-sub">{{knownCount}} 个地点已收录 · {{unknownCount}} 个未收录</text>
+      </view>
+    </view>
+
+    <!-- 模拟数据提示：答辩时必须能说清楚这块是真还是演示 -->
+    <view class="mock-tip" wx:if="{{isMock}}">
+      <text class="mock-tip-text">当前为演示数据。接入 OCR 后这里显示照片里真实的课程。</text>
+    </view>
+
+    <!-- 课程列表 -->
+    <view class="card" wx:if="{{courses.length > 0}}">
+      <view
+        class="course-item"
+        wx:for="{{courses}}"
+        wx:key="time"
+        data-index="{{index}}"
+        bindtap="onCourseTap"
+        hover-class="pressed"
+      >
+        <view class="course-left">
+          <text class="course-time">{{item.time}}</text>
+          <text class="course-name">{{item.course}}</text>
+          <view class="course-place">
+            <!-- 小圆点：蓝=已收录，灰=未收录 -->
+            <view class="dot {{item.ok ? 'dot-ok' : 'dot-unknown'}}"></view>
+            <text class="place-text {{item.ok ? '' : 'place-text-dim'}}">{{item.place}}</text>
+            <text class="place-alias" wx:if="{{item.ok}}">= {{item.placeName}}</text>
+          </view>
+        </view>
+        <text class="arrow" wx:if="{{item.ok}}">›</text>
+        <text class="arrow-dim" wx:else>未收录</text>
+      </view>
+    </view>
+
+    <view class="card empty-card" wx:else>
+      <text class="empty-text">这张图里没认出课程，换一张试试</text>
+    </view>
+
+    <view class="actions">
+      <button class="btn-primary" hover-class="pressed" bindtap="onRetake">换一张照片</button>
+    </view>
+
+    <view class="footer">
+      <text class="footer-text">点任一节课可查看进门路线与耗时</text>
+    </view>
+
+  </block>
+
+</view>

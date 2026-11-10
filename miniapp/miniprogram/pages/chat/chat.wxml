@@ -1,0 +1,72 @@
+<!-- chat.wxml：AI 对话页 -->
+<!-- 布局思路：整页 flex 竖排三段 —— 消息区（占满剩余） / 快捷问题 / 输入栏 -->
+
+<view class="page">
+
+  <!-- 消息区：scroll-y 让它可以滚动，scroll-into-view 控制滚到哪 -->
+  <scroll-view
+    class="chat-body"
+    scroll-y
+    scroll-into-view="{{toView}}"
+    scroll-with-animation
+  >
+    <!-- 每条消息一行；role 是 ai 还是 user 决定左右对齐 -->
+    <view class="msg-row {{item.role}}" wx:for="{{messages}}" wx:key="id">
+
+      <!-- AI 头像：只在 AI 消息前面显示 -->
+      <view class="avatar" wx:if="{{item.role === 'ai'}}">AI</view>
+
+      <!-- 气泡本体 -->
+      <view class="bubble {{item.role}}">
+        <text class="bubble-text">{{item.content}}</text>
+        <!-- 正在打字时，末尾跟一个闪烁的光标 -->
+        <text class="cursor" wx:if="{{item.typing}}">▍</text>
+
+        <!-- 这条回复涉及了一个具体地点时，给个跳转到结果页的入口 -->
+        <view
+          class="bubble-link"
+          wx:if="{{item.jumpKey}}"
+          data-key="{{item.jumpKey}}"
+          bindtap="onOpenResult"
+          hover-class="pressed"
+        >查看完整信息 ›</view>
+      </view>
+
+    </view>
+
+    <!-- 滚动锚点：一个看不见的空元素，scroll-into-view 就指向它 -->
+    <view id="anchor-bottom" class="anchor"></view>
+  </scroll-view>
+
+  <!-- 快捷问题：横向滚动，点一下直接发送 -->
+  <scroll-view class="quick" scroll-x>
+    <view
+      class="chip"
+      wx:for="{{quickList}}"
+      wx:key="*this"
+      data-q="{{item}}"
+      bindtap="onQuickTap"
+      hover-class="pressed"
+    >{{item}}</view>
+  </scroll-view>
+
+  <!-- 输入区 -->
+  <view class="composer">
+    <input
+      class="composer-input"
+      value="{{inputValue}}"
+      placeholder="比如：教四-302 在哪"
+      placeholder-class="input-placeholder"
+      confirm-type="send"
+      bindinput="onInput"
+      bindconfirm="onSend"
+    />
+    <!-- 输入框为空时按钮变灰：用三元表达式动态加 class -->
+    <view
+      class="send-btn {{inputValue ? '' : 'disabled'}}"
+      bindtap="onSend"
+      hover-class="pressed"
+    >发送</view>
+  </view>
+
+</view>

@@ -1,0 +1,200 @@
+/* home.wxss：只管首页自己的样式。单位用 rpx：750rpx = 屏幕宽度，自动适配各种手机 */
+
+.page {
+  padding: 24rpx 0 60rpx;
+}
+
+/* ---------- 顶部欢迎卡片 ---------- */
+.hero {
+  margin: 0 32rpx 24rpx;
+  padding: 48rpx 36rpx;
+  border-radius: 28rpx;
+  /* 渐变背景：这就是"渲染美化"里最出效果的一招 */
+  background: linear-gradient(135deg, #185fa5, #378add);
+  display: flex;
+  flex-direction: column;
+}
+
+.hero-title {
+  font-size: 44rpx;
+  font-weight: 500;
+  color: #ffffff;
+}
+
+.hero-sub {
+  margin-top: 12rpx;
+  font-size: 26rpx;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* ---------- 功能行（拍照识课表） ---------- */
+.feature-row {
+  display: flex;
+  align-items: center;
+}
+
+/* 左侧圆形图标：一个 view + 居中的文字，纯 CSS 实现，不需要图片 */
+.feature-icon {
+  width: 88rpx;
+  height: 88rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.icon-blue {
+  background-color: #e6f1fb;
+}
+
+/* 对话入口用暖色图标，和上面两个蓝色入口区分开 */
+.icon-chat {
+  background-color: #faeeda;
+}
+
+.icon-chat .feature-icon-text {
+  font-size: 26rpx;
+  color: #854f0b;
+}
+
+.feature-icon-text {
+  font-size: 34rpx;
+  color: #185fa5;
+  font-weight: 500;
+}
+
+.feature-text {
+  flex: 1; /* 占据剩余宽度 */
+  margin: 0 24rpx;
+  display: flex;
+  flex-direction: column;
+}
+
+.feature-title {
+  font-size: 32rpx;
+  font-weight: 500;
+}
+
+.feature-desc {
+  margin-top: 6rpx;
+  font-size: 24rpx;
+  color: #888780;
+}
+
+.feature-arrow {
+  font-size: 40rpx;
+  color: #b4b2a9;
+}
+
+/* ---------- 输入区 ---------- */
+.section-title {
+  font-size: 32rpx;
+  font-weight: 500;
+}
+
+.input-row {
+  margin-top: 24rpx;
+  display: flex;
+  align-items: center;
+}
+
+.place-input {
+  flex: 1;
+  height: 76rpx;
+  padding: 0 24rpx;
+  background-color: #f5f7fa;
+  border-radius: 16rpx;
+  font-size: 28rpx;
+}
+
+.input-placeholder {
+  color: #b4b2a9;
+}
+
+.search-btn {
+  margin-left: 20rpx;
+  background-color: #185fa5;
+  color: #ffffff;
+  border-radius: 16rpx;
+  font-size: 28rpx;
+  /* 去掉 button 自带的边框 */
+  border: none;
+  line-height: 76rpx;
+  padding: 0 32rpx;
+}
+
+/* 微信 button 默认有右边距，去掉它 */
+.search-btn::after {
+  border: none;
+}
+
+/* ---------- 历史记录 ---------- */
+.history-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.clear-btn {
+  font-size: 24rpx;
+  color: #888780;
+  padding: 8rpx;
+}
+
+.empty {
+  padding: 48rpx 0;
+  display: flex;
+  justify-content: center;
+}
+
+.empty-text {
+  font-size: 26rpx;
+  color: #b4b2a9;
+}
+
+.history-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24rpx 0;
+  /* 相邻项之间画一条浅色分割线 */
+  border-bottom: 1rpx solid #f1efe8;
+}
+
+.history-item:last-child {
+  border-bottom: none;
+}
+
+.history-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.history-name {
+  font-size: 30rpx;
+}
+
+.history-time {
+  margin-top: 6rpx;
+  font-size: 22rpx;
+  color: #b4b2a9;
+}
+
+/* ---------- 通用按压效果 ---------- */
+/* hover-class：手指按下去时的样式变化，按钮的"呼吸感"就靠它 */
+.pressed {
+  opacity: 0.6;
+}
+
+/* ---------- 页脚 ---------- */
+.footer {
+  display: flex;
+  justify-content: center;
+  margin-top: 16rpx;
+}
+
+.footer-text {
+  font-size: 22rpx;
+  color: #b4b2a9;
+}

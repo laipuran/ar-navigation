@@ -1,0 +1,20 @@
+{
+  "pages": [
+    "pages/home/home",
+    "pages/result/result",
+    "pages/chat/chat",
+    "pages/timetable/timetable",
+    "pages/map/map",
+    "pages/ar/ar"
+  ],
+  "window": {
+    "navigationBarTitleText": "珞珈导航",
+    "navigationBarBackgroundColor": "#185FA5",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#F5F7FA",
+    "backgroundTextStyle": "dark"
+  },
+  "style": "v2",
+  "lazyCodeLoading": "requiredComponents",
+  "sitemapLocation": "sitemap.json"
+}
