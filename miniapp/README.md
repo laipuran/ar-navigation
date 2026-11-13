@@ -17,6 +17,12 @@
 ```
 miniapp/
 ├─ project.config.json      # 工程配置（miniprogramRoot 指向 miniprogram/）
+├─ server/                  # 小程序后端（BFF，Node 零依赖）
+│  ├─ server.js             # 入口：node server.js 启动，默认端口 8787
+│  ├─ lib/                  # 地点解析 / Dijkstra 算路 / OCR 服务
+│  ├─ data/                 # 楼栋图数据，格式遵循 schemas/navigation.schema.json
+│  ├─ test.js               # 自测（27 项断言）
+│  └─ README.md             # 接口文档
 └─ miniprogram/             # 小程序代码根目录
    ├─ app.js / app.json / app.wxss
    ├─ data/
@@ -47,6 +53,20 @@ miniapp/
 | AI 对话 | 多轮上下文真实，回复由本地规则生成 |
 
 `data/places.js`、`data/geo.js`、`services/ocr.js` 三处是待替换的接入点：换成后端接口时页面代码无需改动。
+
+## 后端服务（BFF）
+
+`miniapp/server` 提供小程序专用接口：地点解析、楼内最短路径（Dijkstra）、课表识别、对话转发。
+
+```sh
+cd miniapp/server && node server.js    # 启动，端口 8787
+node test.js                           # 自测
+```
+
+- 楼栋数据与 Rust 后端共用 `schemas/navigation.schema.json` 格式（单一数据源）
+- 对话接口原样转发到 Rust 后端 `POST /api/v1/assistant/messages`，上游不可达返回 `502 UPSTREAM_UNAVAILABLE`
+- 小程序端通过 `miniprogram/services/api.js` 访问，策略为**远程优先、本地兜底**：后端没启动时页面照常工作
+- 开发者在工具「详情 → 本地设置」勾选「不校验合法域名」后即可联调；详见 `server/README.md`
 
 ## 已知限制
 

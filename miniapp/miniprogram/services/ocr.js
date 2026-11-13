@@ -45,7 +45,14 @@ const SAMPLE_COURSES = [
 // 对外唯一接口
 // 返回 Promise，resolve 出来的结构固定为 { ok, courses, engine }
 // engine 字段用来标记"这次是模拟还是真识别"，方便页面显示提示
-function recognize(filePath) {
+//
+// 【当前策略：远程优先、本地兜底】
+// 优先调后端 /api/v1/ocr/recognize（BFF，见 miniapp/server）；
+// 后端没启动或超时，自动回退到本地 mock——页面代码完全不用改，
+// 这正是"服务层可插拔"设计带来的好处。
+const { recognizeTimetable } = require('./api.js')
+
+function localMock() {
   return new Promise(function (resolve) {
     // 模拟网络耗时，让进度条有得演
     setTimeout(function () {
@@ -56,6 +63,18 @@ function recognize(filePath) {
       })
     }, 1600)
   })
+}
+
+function recognize(filePath) {
+  return recognizeTimetable()
+    .then(function (res) {
+      // 后端返回 { ok, engine, courses }，结构与本地 mock 一致
+      return { ok: true, engine: res.engine, courses: res.courses }
+    })
+    .catch(function () {
+      // 后端不可用 -> 本地兜底
+      return localMock()
+    })
 }
 
 module.exports = {
