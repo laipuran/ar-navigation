@@ -33,9 +33,13 @@ function request(method, path, data, timeoutMs) {
         } else {
           // 后端的错误结构是 { error: { code, message } }，原样抛给调用方
           const err = (res.data && res.data.error) || {}
+          // 契约：429 RATE_LIMITED 时后端会带 Retry-After 头（秒数），透传给调用方
+          const header = res.header || {}
+          const retryAfter = Number(header['Retry-After'] || header['retry-after'] || 0)
           reject({
             code: err.code || 'HTTP_' + res.statusCode,
-            message: err.message || ('请求失败：' + res.statusCode)
+            message: err.message || ('请求失败：' + res.statusCode),
+            retryAfter: retryAfter > 0 ? retryAfter : undefined
           })
         }
       },

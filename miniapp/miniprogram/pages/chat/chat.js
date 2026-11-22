@@ -6,11 +6,12 @@
 // 3. 上下文：记住"上一句聊的是哪个地点"，才能听懂"走路要多久"这种追问
 //
 // 【关于"AI"】
-// 现在没有后端，回复是靠本地规则生成的（调用 data/places.js 的解析器）。
-// 以后接入真大模型时，只需要把 buildReply 换成 wx.request 请求后端，
-// 打字机、滚动、上下文这些 UI 部分一行都不用改。
+// 回复优先走后端对话接口（services/api.js 的 sendChat -> BFF -> 同学的 Rust 后端），
+// 后端连不上时自动回退到本地规则 buildReply，保证断网演示不翻车。
+// 打字机、滚动这些 UI 部分与数据来源完全解耦——不管回复从哪来，展示逻辑都一样。
 
 const { resolvePlace } = require('../../data/places.js')
+const { sendChat, remoteEnabled } = require('../../services/api.js')
 
 // 开场白
 const WELCOME = '你好，我是珞珈导航助手。\n把课表上的地点直接发给我，我帮你翻译成"人话"。\n比如：教四-302'
@@ -153,6 +154,8 @@ Page({
     this.lastPlace = null
     // 打字定时器的句柄，页面卸载时要清掉
     this.timer = null
+    // 对话会话 ID（后端生成）。首轮为 null；续聊时请求里原样带上
+    this.conversationId = null
 
     // 推入开场白
     const messages = [{
@@ -222,18 +225,55 @@ Page({
       this.scrollToBottom()
     })
 
-    // 2. 算出回复内容（"AI 思考"的时间就用 setTimeout 假装一下）
-    const reply = buildReply(text, this.lastPlace)
-    this.lastPlace = reply.place   // 更新上下文
+    // 2. 取回复：优先走后端对话接口（真链路），失败时回退本地规则
+    const useLocal = () => {
+      const reply = buildReply(text, this.lastPlace)
+      this.lastPlace = reply.place   // 更新上下文
+      const jumpKey = reply.place && reply.place.jumpKey ? reply.place.jumpKey : ''
+      this.deliver(messages, reply.text, jumpKey, 400)
+    }
 
-    // 3. 只有"回答了一个具体地点"时，才给跳转入口
-    const jumpKey = reply.place && reply.place.jumpKey ? reply.place.jumpKey : ''
+    if (!remoteEnabled) return useLocal()
 
-    // 延迟 400ms 再开始打字，比"秒回"更像真人
+    // 契约（docs/specs/api.md）：首轮不传任何 ID；续聊带上上次响应返回的 conversation_id
+    const payload = { message: text }
+    if (this.conversationId) payload.conversation_id = this.conversationId
+
+    sendChat(payload)
+      .then((res) => {
+        // 契约：同一会话的成功响应保持相同 conversation_id，存起来下一轮带上
+        if (res.conversation_id) this.conversationId = res.conversation_id
+        // "查看完整信息"按钮仍靠本地解析用户这句话里提到的地点
+        const local = extractPlace(text) || this.lastPlace
+        if (local) this.lastPlace = local
+        const jumpKey = local && local.jumpKey ? local.jumpKey : ''
+        this.deliver(messages, res.reply, jumpKey, 0)
+      })
+      .catch((err) => {
+        // 契约：会话失效/达到上限 -> 提示重新开始，清掉旧 ID，下一条消息自动开新会话
+        if (err && (err.code === 'CONVERSATION_UNAVAILABLE' || err.code === 'CONVERSATION_LIMIT_REACHED')) {
+          this.conversationId = null
+          this.deliver(messages,
+            '我们的对话好像结束了。\n你重新说一遍地点（比如"教四-302"），我们重新开始～', '', 0)
+          return
+        }
+        // 契约：429 限流 -> 按 Retry-After 提示等待
+        if (err && err.code === 'RATE_LIMITED' && err.retryAfter > 0) {
+          this.deliver(messages,
+            '问得太快啦，我需要 ' + err.retryAfter + ' 秒缓一缓，稍后再发一次吧。', '', 0)
+          return
+        }
+        // 网络不通 / 服务挂了 / 其他错误 -> 本地兜底，保证演示不翻车
+        useLocal()
+      })
+  },
+
+  // 统一出口：延迟 delayMs 后开始打字。
+  // 注意下标：新消息追加在末尾，所以是 messages.length - 1
+  deliver(messages, fullText, jumpKey, delayMs) {
     setTimeout(() => {
-      // 注意下标：新消息追加在末尾，所以是 messages.length - 1
-      this.typeOut(messages.length - 1, reply.text, jumpKey)
-    }, 400)
+      this.typeOut(messages.length - 1, fullText, jumpKey)
+    }, delayMs)
   },
 
   // ---------- 打字机 ----------

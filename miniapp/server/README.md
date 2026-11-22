@@ -8,13 +8,14 @@
 cd miniapp/server
 node server.js                 # 默认端口 8787
 PORT=9000 node server.js       # 自定义端口
-node test.js                   # 自测（27 项断言）
+node test.js                   # 自测（41 项断言）
 ```
 
 | 环境变量 | 默认值 | 说明 |
 | --- | --- | --- |
 | `PORT` | `8787` | 监听端口 |
 | `ASSISTANT_BASE_URL` | `http://127.0.0.1:8080` | Rust 后端对话接口地址 |
+| `ASSISTANT_TIMEOUT_MS` | `60000` | 等待 Rust 后端响应的超时时间 |
 | `TENCENT_OCR_SECRET_ID/KEY` | 无 | 配置后才能启用真实 OCR（当前恒为 mock） |
 
 ## 接口
@@ -69,7 +70,7 @@ curl "http://127.0.0.1:8787/api/v1/routes/plan?name=教四-302"
 
 ### POST /api/v1/chat/messages
 
-请求/响应/错误码与 Rust 后端 `POST /api/v1/assistant/messages` 完全一致（见 `docs/specs/api.md`）。上游不可达时返回 `502 UPSTREAM_UNAVAILABLE`。
+请求/响应/错误码与 Rust 后端 `POST /api/v1/assistant/messages` 完全一致（见 `docs/specs/api.md`）。参数校验在 BFF 层执行：拒绝未知字段、空/超长 `conversation_id`、超 4000 字 `message`、超 32 KiB 请求体与非法 JSON，统一 `400 INVALID_REQUEST`。上游不可达返回 `502 MODEL_UNAVAILABLE`，等待上游超时返回 `504 REQUEST_TIMEOUT`；429 时透传上游的 `Retry-After` 头。
 
 ## 数据
 
