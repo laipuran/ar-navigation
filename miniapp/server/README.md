@@ -9,6 +9,7 @@ cd miniapp/server
 node server.js                 # 默认端口 8787
 PORT=9000 node server.js       # 自定义端口
 node test.js                   # 自测（43 项断言）
+node doctor.js                 # 链路体检：谁在跑、断在哪、影响哪些功能
 ```
 
 | 环境变量 | 默认值 | 说明 |
