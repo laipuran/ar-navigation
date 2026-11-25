@@ -103,6 +103,12 @@ async function main() {
       const j = await r.json()
       check('GET /health 200', r.status === 200)
       check('health 返回 X-Request-ID', Boolean(r.headers.get('x-request-id')))
+      check('health 报告上游不可达（死端口）', j.assistantReachable === false)
+    }
+    {
+      const r = await fetch(B2 + '/api/v1/health')
+      const j = await r.json()
+      check('health 报告上游可达（mock 在跑）', j.assistantReachable === true)
     }
 
     // ---------- 2. 楼栋列表 ----------

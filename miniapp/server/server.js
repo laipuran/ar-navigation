@@ -14,12 +14,13 @@
 // 【运行】
 //   node server.js                    # 默认端口 8787
 //   PORT=9000 node server.js          # 自定义端口
-//   ASSISTANT_BASE_URL=http://127.0.0.1:8080 node server.js   # 指定 Rust 后端地址
+//   ASSISTANT_BASE_URL=http://127.0.0.1:3000 node server.js   # 指定 Rust 后端地址
 //
 // 【零依赖】只用 Node 内置模块，不需要 npm install。
 
 const http = require('http')
 const crypto = require('crypto')
+const net = require('net')
 const { URL } = require('url')
 
 const { listBuildings } = require('./lib/buildings')
@@ -28,7 +29,8 @@ const { planRoute } = require('./lib/routing')
 const { recognize } = require('./lib/ocr')
 
 const PORT = Number(process.env.PORT) || 8787
-const ASSISTANT_BASE_URL = process.env.ASSISTANT_BASE_URL || 'http://127.0.0.1:8080'
+// 与 backend/README.md 一致：Rust 后端默认监听 127.0.0.1:3000
+const ASSISTANT_BASE_URL = process.env.ASSISTANT_BASE_URL || 'http://127.0.0.1:3000'
 const ASSISTANT_TIMEOUT_MS = Number(process.env.ASSISTANT_TIMEOUT_MS) || 60000
 const BODY_LIMIT = 32 * 1024   // 与 Rust 后端保持一致的请求体上限
 
@@ -80,16 +82,40 @@ function readBody(req) {
   })
 }
 
+// 探测某个地址的 TCP 端口是否有人监听。
+// 用途：health 接口直接告诉你"Rust 后端到底通不通"，省得去猜 502 是谁的问题。
+function probeTcp(baseUrl, timeoutMs) {
+  return new Promise(function (resolve) {
+    let url
+    try { url = new URL(baseUrl) } catch (e) { return resolve(false) }
+    const port = Number(url.port) || (url.protocol === 'https:' ? 443 : 80)
+    const socket = net.connect({ host: url.hostname, port })
+    let done = false
+    function finish(ok) {
+      if (done) return
+      done = true
+      socket.destroy()
+      resolve(ok)
+    }
+    socket.setTimeout(timeoutMs)
+    socket.on('connect', function () { finish(true) })
+    socket.on('timeout', function () { finish(false) })
+    socket.on('error', function () { finish(false) })
+  })
+}
+
 // ---------- 业务处理器 ----------
 
 const handlers = {
 
-  // 健康检查
-  'GET /api/v1/health': function (req, res, requestId) {
+  // 健康检查：顺带探测 Rust 后端端口通不通
+  'GET /api/v1/health': async function (req, res, requestId) {
+    const assistantReachable = await probeTcp(ASSISTANT_BASE_URL, 500)
     sendJson(res, 200, {
       ok: true,
       service: 'miniapp-bff',
       assistantBackend: ASSISTANT_BASE_URL,
+      assistantReachable: assistantReachable,
       uptimeSeconds: Math.round(process.uptime())
     }, requestId)
   },

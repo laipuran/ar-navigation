@@ -8,13 +8,13 @@
 cd miniapp/server
 node server.js                 # 默认端口 8787
 PORT=9000 node server.js       # 自定义端口
-node test.js                   # 自测（41 项断言）
+node test.js                   # 自测（43 项断言）
 ```
 
 | 环境变量 | 默认值 | 说明 |
 | --- | --- | --- |
 | `PORT` | `8787` | 监听端口 |
-| `ASSISTANT_BASE_URL` | `http://127.0.0.1:8080` | Rust 后端对话接口地址 |
+| `ASSISTANT_BASE_URL` | `http://127.0.0.1:3000` | Rust 后端对话接口地址（与 `backend/README.md` 的默认 `HTTP_BIND` 一致） |
 | `ASSISTANT_TIMEOUT_MS` | `60000` | 等待 Rust 后端响应的超时时间 |
 | `TENCENT_OCR_SECRET_ID/KEY` | 无 | 配置后才能启用真实 OCR（当前恒为 mock） |
 
@@ -24,7 +24,7 @@ node test.js                   # 自测（41 项断言）
 
 | 方法 | 路径 | 说明 |
 | --- | --- | --- |
-| GET | `/api/v1/health` | 健康检查 |
+| GET | `/api/v1/health` | 健康检查，`assistantReachable` 字段表示 Rust 后端端口是否可达 |
 | GET | `/api/v1/buildings` | 楼栋列表（含是否已建室内图 `mapped`） |
 | GET | `/api/v1/places/resolve?name=` | 黑话解析，如 `教四-302` |
 | GET | `/api/v1/routes/plan?name=` | 门到房间的楼内路线 |
