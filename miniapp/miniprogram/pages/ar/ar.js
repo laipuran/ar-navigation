@@ -27,6 +27,7 @@ Page({
     cameraError: false,
     cameraErrMsg: '',  // 相机失败的具体原因（排查用）
     camAuth: 'unknown', // scope.camera 授权状态：granted / denied / prompt / unknown
+    camDebug: '',       // 排查用：基础库版本 + 完整授权表
     simRunning: true
   },
 
@@ -69,6 +70,12 @@ Page({
     wx.getSetting({
       success: (res) => {
         const auth = res.authSetting['scope.camera']
+        // 把基础库版本和完整授权表打到界面上，便于真机一眼定位问题
+        let sdk = '未知'
+        try { sdk = wx.getSystemInfoSync().SDKVersion } catch (err) {}
+        this.setData({
+          camDebug: '基础库 ' + sdk + '｜授权表 ' + JSON.stringify(res.authSetting)
+        })
         if (auth === true) {
           this.setData({ camAuth: 'granted' })
         } else if (auth === false) {

@@ -18,6 +18,7 @@
     <text class="fallback-desc">开发者工具调不起摄像头，这是正常现象。\n点顶部「预览」用手机扫码，就能看到真实的 AR 画面。\n下面的文字与箭头逻辑和真机完全一致。</text>
     <text class="fallback-desc">错误信息：{{cameraErrMsg || '未知（可能是旧版本二维码，重新生成预览试试）'}}</text>
     <text class="fallback-desc">授权状态：{{camAuth === 'granted' ? '已授权' : camAuth === 'denied' ? '被拒绝（弹窗不会再弹，需手动开启）' : '未询问'}}</text>
+    <text class="fallback-desc" wx:if="{{camDebug}}">诊断：{{camDebug}}</text>
     <!-- 曾经被拒过时，弹窗永远不会再出现，只能引导用户去设置页手动开 -->
     <view class="auth-btn" wx:if="{{camAuth === 'denied'}}" hover-class="pressed" bindtap="onOpenAuthSetting">去开启相机权限</view>
   </view>
