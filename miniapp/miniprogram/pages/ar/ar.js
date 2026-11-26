@@ -25,6 +25,8 @@ Page({
     distance: 120,
     heading: 0,        // 箭头旋转角度
     cameraError: false,
+    cameraErrMsg: '',  // 相机失败的具体原因（排查用）
+    camAuth: 'unknown', // scope.camera 授权状态：granted / denied / prompt / unknown
     simRunning: true
   },
 
@@ -55,7 +57,55 @@ Page({
     })
     wx.setNavigationBarTitle({ title: 'AR 实景指引' })
 
+    this.checkCameraAuth()
     this.startSim()
+  },
+
+  // 主动查询相机授权状态，分三种情况处理：
+  //   granted —— 已授权，等 camera 组件自然启动即可
+  //   prompt  —— 从未问过，主动调 wx.authorize 触发系统弹窗
+  //   denied  —— 曾经被拒，弹窗不会再出现，只能引导用户去设置页手动开
+  checkCameraAuth() {
+    wx.getSetting({
+      success: (res) => {
+        const auth = res.authSetting['scope.camera']
+        if (auth === true) {
+          this.setData({ camAuth: 'granted' })
+        } else if (auth === false) {
+          // 曾经点过"拒绝"：记录状态，wxml 里会显示"去授权"按钮
+          this.setData({ camAuth: 'denied' })
+          console.warn('相机权限曾被拒绝，需引导用户到设置页开启')
+        } else {
+          // undefined = 从未询问过，主动发起授权请求（会弹窗）
+          this.setData({ camAuth: 'prompt' })
+          wx.authorize({
+            scope: 'scope.camera',
+            success: () => this.setData({ camAuth: 'granted' }),
+            fail: (e) => {
+              // 用户在弹窗里点了"拒绝"也会走到这里
+              this.setData({ camAuth: 'denied' })
+              console.warn('wx.authorize 相机授权被拒：', e.errMsg)
+            }
+          })
+        }
+      },
+      fail: (e) => console.error('getSetting 失败：', e.errMsg)
+    })
+  },
+
+  // 跳到小程序的授权设置页（用户手动打开相机开关后返回）
+  onOpenAuthSetting() {
+    wx.openSetting({
+      success: (res) => {
+        if (res.authSetting['scope.camera'] === true) {
+          // 用户开好了：复位降级界面，重新挂载 camera 组件
+          this.setData({ camAuth: 'granted', cameraError: false, cameraErrMsg: '' })
+          wx.showToast({ title: '相机权限已开启', icon: 'success' })
+        } else {
+          wx.showToast({ title: '相机权限仍未开启', icon: 'none' })
+        }
+      }
+    })
   },
 
   // 离开页面必须清掉所有定时器
@@ -104,8 +154,12 @@ Page({
   },
 
   // 相机启动失败（开发者工具里几乎必然触发）
-  onCameraError() {
-    this.setData({ cameraError: true })
+  // e.detail.errMsg 会告诉我们败在哪一层：系统权限 / 微信授权 / 隐私协议 / 组件错误
+  onCameraError(e) {
+    const detail = (e && e.detail) || {}
+    const msg = detail.errMsg || JSON.stringify(detail)
+    console.error('相机启动失败：', msg)
+    this.setData({ cameraError: true, cameraErrMsg: msg })
   },
 
   onExit() {

@@ -30,6 +30,9 @@
   align-items: center;
   justify-content: center;
   padding: 0 64rpx;
+  /* 整层放行点击：overlay(z-index:10) 铺满全屏会拦走所有 tap，
+     这里把 fallback 变成"点击穿透"，否则里面的按钮永远按不到 */
+  pointer-events: none;
 }
 
 .fallback-title {
@@ -45,6 +48,21 @@
   line-height: 1.8;
   text-align: center;
   white-space: pre-wrap;
+}
+
+/* "去开启相机权限"按钮 —— 单独恢复可点击（父层是 pointer-events:none） */
+.auth-btn {
+  margin-top: 48rpx;
+  padding: 20rpx 56rpx;
+  border-radius: 44rpx;
+  background-color: #2f6fed;
+  color: #ffffff;
+  font-size: 28rpx;
+  pointer-events: auto;
+}
+
+.auth-btn.pressed {
+  opacity: 0.8;
 }
 
 /* ---------- 叠加层 ---------- */
