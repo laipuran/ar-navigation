@@ -1,0 +1,98 @@
+<!-- home.wxml：页面结构。语法像 HTML，但组件是小程序专属的 -->
+<!-- view = 块级容器(类似 div)，text = 行内文本(类似 span) -->
+<!-- {{ }} 是插值：把 js 里 data 的变量显示出来 -->
+
+<view class="page">
+
+  <!-- 顶部欢迎卡片 -->
+  <view class="hero">
+    <text class="hero-title">嗨，珞珈新生</text>
+    <text class="hero-sub">把课表交给 AI，从此不迷路</text>
+  </view>
+
+  <!-- 功能一：拍照识课表 -->
+  <view class="card">
+    <view class="feature-row" hover-class="pressed" bindtap="onChooseTimetable">
+      <view class="feature-icon icon-blue">
+        <text class="feature-icon-text">拍</text>
+      </view>
+      <view class="feature-text">
+        <text class="feature-title">拍照识课表</text>
+        <text class="feature-desc">拍下课表，AI 帮你翻译每一节课在哪</text>
+      </view>
+      <text class="feature-arrow">›</text>
+    </view>
+  </view>
+
+  <!-- 功能二：手动输入地点 -->
+  <view class="card">
+    <text class="section-title">手动查教室</text>
+    <view class="input-row">
+      <!-- input 组件：bindinput 每敲一个字都会通知 js -->
+      <input
+        class="place-input"
+        value="{{inputValue}}"
+        placeholder="试试输入：教四-302"
+        placeholder-class="input-placeholder"
+        confirm-type="search"
+        bindinput="onInput"
+        bindconfirm="onSearch"
+      />
+      <button class="search-btn" hover-class="pressed" size="mini" bindtap="onSearch">查询</button>
+    </view>
+  </view>
+
+  <!-- 功能三：进入 AI 对话页 -->
+  <view class="card">
+    <view class="feature-row" hover-class="pressed" bindtap="onOpenChat">
+      <view class="feature-icon icon-chat">
+        <text class="feature-icon-text">AI</text>
+      </view>
+      <view class="feature-text">
+        <text class="feature-title">问问 AI 助手</text>
+        <text class="feature-desc">聊天式追问，比如「走路要多久」</text>
+      </view>
+      <text class="feature-arrow">›</text>
+    </view>
+  </view>
+
+  <!-- 历史记录 -->
+  <view class="card">
+    <view class="history-head">
+      <text class="section-title">最近查询</text>
+      <!-- 只在有历史时显示"清空"按钮：wx:if 条件渲染 -->
+      <text wx:if="{{history.length > 0}}" class="clear-btn" bindtap="onClearHistory">清空</text>
+    </view>
+
+    <!-- 列表：wx:for 循环渲染，wx:key 给每项唯一标识 -->
+    <!-- block 是"看不见的容器"：只负责包裹 wx:if/wx:else，不产生真实节点 -->
+    <!-- 注意：wx:if 和 wx:else 必须是紧挨着的兄弟节点，中间不能隔别的标签 -->
+    <block wx:if="{{history.length > 0}}">
+      <view
+        wx:for="{{history}}"
+        wx:key="id"
+        class="history-item"
+        hover-class="pressed"
+        bindtap="onItemTap"
+        bindlongpress="onItemLongPress"
+        data-index="{{index}}"
+      >
+        <view class="history-info">
+          <text class="history-name">{{item.name}}</text>
+          <text class="history-time">{{item.timeText}}</text>
+        </view>
+        <text class="feature-arrow">›</text>
+      </view>
+    </block>
+
+    <!-- 空状态：wx:else 对应上面 block 的 wx:if -->
+    <view wx:else class="empty">
+      <text class="empty-text">还没有记录，先查一个试试吧</text>
+    </view>
+  </view>
+
+  <view class="footer">
+    <text class="footer-text">武大榜题 · AI校园室内精准导航</text>
+  </view>
+
+</view>

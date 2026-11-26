@@ -1,0 +1,42 @@
+{
+  "nodes": [
+    {"id": "gate-south", "floor_id": 1, "kind": {"type": "gate", "description": "南门（面向珞珈山路）"}},
+    {"id": "j-lobby-1", "floor_id": 1, "kind": {"type": "junction", "neighbors": ["gate-south", "r101", "stairs-1", "r102"]}},
+    {"id": "r101", "floor_id": 1, "kind": {"type": "room", "name": "101"}},
+    {"id": "r102", "floor_id": 1, "kind": {"type": "room", "name": "102"}},
+    {"id": "stairs-1", "floor_id": 1, "kind": {"type": "stairs"}},
+
+    {"id": "stairs-2", "floor_id": 2, "kind": {"type": "stairs"}},
+    {"id": "j-lobby-2", "floor_id": 2, "kind": {"type": "junction", "neighbors": ["stairs-2", "r201", "r202"]}},
+    {"id": "r201", "floor_id": 2, "kind": {"type": "room", "name": "201"}},
+    {"id": "r202", "floor_id": 2, "kind": {"type": "room", "name": "202"}},
+
+    {"id": "stairs-3", "floor_id": 3, "kind": {"type": "stairs"}},
+    {"id": "j-lobby-3", "floor_id": 3, "kind": {"type": "junction", "neighbors": ["stairs-3", "r301", "j-corridor-3", "r302"]}},
+    {"id": "r301", "floor_id": 3, "kind": {"type": "room", "name": "301"}},
+    {"id": "r302", "floor_id": 3, "kind": {"type": "room", "name": "302"}},
+    {"id": "j-corridor-3", "floor_id": 3, "kind": {"type": "junction", "neighbors": ["j-lobby-3", "r304", "r303"]}},
+    {"id": "r303", "floor_id": 3, "kind": {"type": "room", "name": "303"}},
+    {"id": "r304", "floor_id": 3, "kind": {"type": "room", "name": "304"}}
+  ],
+  "edges": [
+    {"endpoints": ["gate-south", "j-lobby-1"], "kind": {"type": "walk", "distance_m": 5}},
+    {"endpoints": ["j-lobby-1", "r101"], "kind": {"type": "walk", "distance_m": 6}},
+    {"endpoints": ["j-lobby-1", "r102"], "kind": {"type": "walk", "distance_m": 6}},
+    {"endpoints": ["j-lobby-1", "stairs-1"], "kind": {"type": "walk", "distance_m": 8}},
+
+    {"endpoints": ["stairs-1", "stairs-2"], "kind": {"type": "stair_flight", "distance_m": 12}},
+    {"endpoints": ["stairs-2", "stairs-3"], "kind": {"type": "stair_flight", "distance_m": 12}},
+
+    {"endpoints": ["stairs-2", "j-lobby-2"], "kind": {"type": "walk", "distance_m": 8}},
+    {"endpoints": ["j-lobby-2", "r201"], "kind": {"type": "walk", "distance_m": 6}},
+    {"endpoints": ["j-lobby-2", "r202"], "kind": {"type": "walk", "distance_m": 6}},
+
+    {"endpoints": ["stairs-3", "j-lobby-3"], "kind": {"type": "walk", "distance_m": 8}},
+    {"endpoints": ["j-lobby-3", "r301"], "kind": {"type": "walk", "distance_m": 6}},
+    {"endpoints": ["j-lobby-3", "r302"], "kind": {"type": "walk", "distance_m": 5}},
+    {"endpoints": ["j-lobby-3", "j-corridor-3"], "kind": {"type": "walk", "distance_m": 10}},
+    {"endpoints": ["j-corridor-3", "r303"], "kind": {"type": "walk", "distance_m": 6}},
+    {"endpoints": ["j-corridor-3", "r304"], "kind": {"type": "walk", "distance_m": 6}}
+  ]
+}

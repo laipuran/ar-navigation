@@ -1,0 +1,175 @@
+/* chat.wxss：对话页样式 */
+
+/* 整页三段式：上下固定，中间滚动 */
+.page {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #f5f7fa;
+  box-sizing: border-box;
+}
+
+/* 消息区：flex:1 占满剩余空间，height:0 是关键 ——
+   scroll-view 必须有确定高度才能滚动，
+   在 flex 容器里靠 flex:1 撑开高度时，必须补一个 height:0 才能生效 */
+.chat-body {
+  flex: 1;
+  height: 0;
+  padding: 24rpx 24rpx 0;
+  box-sizing: border-box;
+}
+
+/* 一条消息：默认左对齐（AI） */
+.msg-row {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 28rpx;
+}
+
+/* 用户消息靠右 */
+.msg-row.user {
+  justify-content: flex-end;
+}
+
+/* AI 头像：圆形纯色块 + 文字，不依赖图片 */
+.avatar {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 50%;
+  background-color: #185fa5;
+  color: #ffffff;
+  font-size: 22rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-right: 16rpx;
+}
+
+/* 气泡通用：最大宽度 78%，留出边距 */
+.bubble {
+  max-width: 78%;
+  padding: 20rpx 24rpx;
+  border-radius: 20rpx;
+  /* 内联元素（text）需要这个才能正确换行 */
+  word-break: break-all;
+}
+
+/* AI 气泡：白底 */
+.bubble.ai {
+  background-color: #ffffff;
+  /* 左上角小尖角，靠圆角差异做出来，不需要额外图形 */
+  border-top-left-radius: 6rpx;
+}
+
+/* 用户气泡：主色蓝底白字 */
+.bubble.user {
+  background-color: #185fa5;
+  border-top-right-radius: 6rpx;
+}
+
+.bubble-text {
+  font-size: 30rpx;
+  line-height: 1.6;
+  /* pre-wrap 保留文本里的 \n 换行，否则所有回复会挤成一行 */
+  white-space: pre-wrap;
+}
+
+.bubble.ai .bubble-text {
+  color: #2c2c2a;
+}
+
+.bubble.user .bubble-text {
+  color: #ffffff;
+}
+
+/* 打字光标：闪烁动画 */
+.cursor {
+  font-size: 28rpx;
+  color: #185fa5;
+  animation: blink 1s step-end infinite;
+}
+
+/* 气泡里的跳转入口：一条细分隔线 + 蓝色文字 */
+.bubble-link {
+  margin-top: 16rpx;
+  padding-top: 16rpx;
+  border-top: 1rpx solid #f1efe8;
+  font-size: 26rpx;
+  color: #185fa5;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* 滚动锚点：不占视觉空间 */
+.anchor {
+  height: 16rpx;
+}
+
+/* ---------- 快捷问题 ---------- */
+.quick {
+  /* scroll-view 横滑必须写 nowrap */
+  white-space: nowrap;
+  padding: 16rpx 24rpx;
+  flex-shrink: 0;
+}
+
+.chip {
+  display: inline-block;
+  padding: 12rpx 24rpx;
+  margin-right: 16rpx;
+  background-color: #ffffff;
+  border: 1rpx solid #f1efe8;
+  border-radius: 999rpx;
+  font-size: 24rpx;
+  color: #5f5e5a;
+}
+
+/* ---------- 输入区 ---------- */
+.composer {
+  display: flex;
+  align-items: center;
+  padding: 16rpx 24rpx;
+  /* env(safe-area-inset-bottom) 是全面屏底部的安全距离 */
+  padding-bottom: calc(16rpx + env(safe-area-inset-bottom));
+  background-color: #ffffff;
+  border-top: 1rpx solid #f1efe8;
+  flex-shrink: 0;
+}
+
+.composer-input {
+  flex: 1;
+  height: 76rpx;
+  padding: 0 24rpx;
+  background-color: #f5f7fa;
+  border-radius: 16rpx;
+  font-size: 28rpx;
+}
+
+.input-placeholder {
+  color: #b4b2a9;
+}
+
+.send-btn {
+  margin-left: 16rpx;
+  padding: 0 32rpx;
+  height: 76rpx;
+  line-height: 76rpx;
+  background-color: #185fa5;
+  color: #ffffff;
+  font-size: 28rpx;
+  border-radius: 16rpx;
+}
+
+/* 输入框为空时按钮变灰，给用户"还不能发"的暗示 */
+.send-btn.disabled {
+  background-color: #d3d1c7;
+  color: #ffffff;
+}
+
+.pressed {
+  opacity: 0.6;
+}

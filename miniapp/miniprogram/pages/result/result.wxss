@@ -1,0 +1,259 @@
+/* result.wxss：结果页样式。配色沿用首页，保持整体一致 */
+
+.page {
+  padding: 24rpx 32rpx 60rpx;
+  background-color: #f5f7fa;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+/* ---------- 顶部"翻译"卡片 ---------- */
+.hero {
+  padding: 44rpx 36rpx;
+  border-radius: 28rpx;
+  background: linear-gradient(135deg, #185fa5, #378add);
+  display: flex;
+  flex-direction: column;
+}
+
+.hero-label {
+  font-size: 24rpx;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* 原始输入：带删除线的感觉，强调"这是你要查的那串黑话" */
+.hero-raw {
+  margin-top: 8rpx;
+  font-size: 36rpx;
+  color: rgba(255, 255, 255, 0.95);
+  letter-spacing: 1rpx;
+}
+
+/* 一条半透明分割线，把"输入"和"翻译结果"隔开 */
+.hero-divider {
+  height: 1rpx;
+  background-color: rgba(255, 255, 255, 0.25);
+  margin: 24rpx 0;
+}
+
+.hero-title {
+  font-size: 44rpx;
+  font-weight: 500;
+  color: #ffffff;
+}
+
+.hero-sub {
+  margin-top: 10rpx;
+  font-size: 26rpx;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* ---------- 通用卡片 ---------- */
+.card {
+  margin-top: 24rpx;
+  padding: 32rpx;
+  background-color: #ffffff;
+  border-radius: 24rpx;
+}
+
+.card-title {
+  font-size: 28rpx;
+  font-weight: 500;
+  color: #2c2c2a;
+  margin-bottom: 24rpx;
+}
+
+/* ---------- 三列网格 ---------- */
+.grid {
+  display: flex;
+}
+
+.grid-item {
+  flex: 1;                      /* 三列平分宽度 */
+  display: flex;
+  flex-direction: column;
+}
+
+.grid-label {
+  font-size: 22rpx;
+  color: #b4b2a9;
+}
+
+.grid-value {
+  margin-top: 8rpx;
+  font-size: 30rpx;
+  color: #2c2c2a;
+}
+
+/* ---------- 路线步骤 ---------- */
+.step {
+  display: flex;
+  margin-bottom: 28rpx;
+}
+
+/* 最后一步不留下边距，否则卡片底部会空一块 */
+.step:last-child {
+  margin-bottom: 0;
+}
+
+/* 序号圆点 */
+.step-index {
+  width: 44rpx;
+  height: 44rpx;
+  border-radius: 50%;
+  background-color: #e6f1fb;
+  color: #185fa5;
+  font-size: 24rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;               /* 宽度不被挤压 */
+}
+
+.step-body {
+  flex: 1;
+  margin-left: 20rpx;
+  display: flex;
+  flex-direction: column;
+  /* 让圆点和文字第一行对齐 */
+  padding-top: 2rpx;
+}
+
+.step-title {
+  font-size: 26rpx;
+  color: #888780;
+}
+
+.step-desc {
+  margin-top: 6rpx;
+  font-size: 30rpx;
+  color: #2c2c2a;
+  line-height: 1.5;
+}
+
+/* ---------- 耗时卡 ---------- */
+.time-row {
+  display: flex;
+  align-items: center;
+}
+
+.time-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* 数字放大，是这张卡片的视觉重点 */
+.time-num {
+  font-size: 64rpx;
+  font-weight: 500;
+  color: #185fa5;
+  line-height: 1.1;
+}
+
+.time-unit {
+  margin-top: 6rpx;
+  font-size: 22rpx;
+  color: #888780;
+}
+
+/* 两个数字之间的竖分隔线 */
+.time-split {
+  width: 1rpx;
+  height: 72rpx;
+  background-color: #f1efe8;
+}
+
+/* 建议：浅蓝底，视觉上是"结论" */
+.advice {
+  margin-top: 28rpx;
+  padding: 20rpx 24rpx;
+  background-color: #e6f1fb;
+  border-radius: 16rpx;
+  font-size: 28rpx;
+  color: #185fa5;
+  line-height: 1.5;
+}
+
+.note {
+  margin-top: 16rpx;
+  font-size: 24rpx;
+  color: #888780;
+  line-height: 1.6;
+}
+
+/* ---------- 按钮 ---------- */
+.actions {
+  margin-top: 36rpx;
+  display: flex;
+  flex-direction: column;
+}
+
+.btn-primary {
+  background-color: #185fa5;
+  color: #ffffff;
+  font-size: 30rpx;
+  border-radius: 20rpx;
+  border: none;
+  line-height: 92rpx;
+  height: 92rpx;
+}
+
+.btn-ghost {
+  margin-top: 20rpx;
+  background-color: #ffffff;
+  color: #185fa5;
+  font-size: 30rpx;
+  border-radius: 20rpx;
+  border: 1rpx solid #cfe2f5;
+  line-height: 92rpx;
+  height: 92rpx;
+}
+
+/* 去掉微信 button 默认的伪元素边框 */
+.btn-primary::after,
+.btn-ghost::after {
+  border: none;
+}
+
+/* 按压效果，和首页共用同一个类名写法 */
+.pressed {
+  opacity: 0.6;
+}
+
+/* ---------- 未收录状态 ---------- */
+.empty-card {
+  padding: 56rpx 36rpx;
+  background-color: #ffffff;
+  border-radius: 24rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.empty-title {
+  font-size: 32rpx;
+  color: #2c2c2a;
+  text-align: center;
+}
+
+.empty-desc {
+  margin-top: 16rpx;
+  font-size: 26rpx;
+  color: #888780;
+  line-height: 1.7;
+  text-align: center;
+}
+
+/* ---------- 页脚 ---------- */
+.footer {
+  margin-top: 24rpx;
+  display: flex;
+  justify-content: center;
+}
+
+.footer-text {
+  font-size: 22rpx;
+  color: #b4b2a9;
+}

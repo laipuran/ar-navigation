@@ -1,0 +1,240 @@
+/* map.wxss：地图页样式 */
+
+.page {
+  min-height: 100vh;
+  padding: 24rpx 32rpx 60rpx;
+  background-color: #f5f7fa;
+  box-sizing: border-box;
+}
+
+/* ---------- 目标卡片 ---------- */
+.target-card {
+  display: flex;
+  align-items: center;
+  padding: 28rpx 32rpx;
+  background-color: #ffffff;
+  border-radius: 24rpx;
+}
+
+.target-left {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.target-name {
+  font-size: 34rpx;
+  font-weight: 500;
+  color: #2c2c2a;
+}
+
+.target-sub {
+  margin-top: 8rpx;
+  font-size: 24rpx;
+  color: #888780;
+}
+
+.target-badge {
+  padding: 8rpx 20rpx;
+  background-color: #e6f1fb;
+  border-radius: 999rpx;
+}
+
+.target-badge-text {
+  font-size: 22rpx;
+  color: #185fa5;
+}
+
+/* ---------- 地图 ---------- */
+.map {
+  width: 100%;
+  height: 460rpx;
+  margin-top: 24rpx;
+  border-radius: 24rpx;
+  /* 圆角对原生组件可能不生效，用 overflow 兜一层 */
+  overflow: hidden;
+}
+
+.map-legend {
+  margin-top: 12rpx;
+  padding: 0 8rpx;
+}
+
+.legend-text {
+  font-size: 22rpx;
+  color: #b4b2a9;
+  line-height: 1.6;
+}
+
+.map-missing {
+  margin-top: 24rpx;
+  height: 200rpx;
+  background-color: #ffffff;
+  border-radius: 24rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.map-missing-text {
+  font-size: 26rpx;
+  color: #b4b2a9;
+}
+
+/* ---------- 楼层示意 ---------- */
+.floor-card {
+  margin-top: 24rpx;
+  padding: 32rpx;
+  background-color: #ffffff;
+  border-radius: 24rpx;
+}
+
+.floor-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 24rpx;
+}
+
+.floor-title {
+  font-size: 30rpx;
+  font-weight: 500;
+  color: #2c2c2a;
+}
+
+.floor-note {
+  font-size: 22rpx;
+  color: #b4b2a9;
+}
+
+/* 房间行 */
+.room-row {
+  display: flex;
+}
+
+.room {
+  flex: 1;
+  height: 100rpx;
+  margin-right: 12rpx;
+  border: 1rpx dashed #d3d1c7;
+  border-radius: 10rpx;
+  background-color: #fafaf8;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.room:last-child {
+  margin-right: 0;
+}
+
+/* 目标房间：实线蓝框 + 浅蓝底，一眼能认出来 */
+.room-target {
+  border: 2rpx solid #185fa5;
+  background-color: #e6f1fb;
+}
+
+.room-no {
+  font-size: 24rpx;
+  color: #888780;
+}
+
+.room-no-target {
+  font-size: 28rpx;
+  font-weight: 500;
+  color: #185fa5;
+}
+
+.room-tag {
+  margin-top: 4rpx;
+  font-size: 18rpx;
+  color: #185fa5;
+}
+
+/* 走廊行：左边楼梯 + 右边走廊通道 */
+.corridor-row {
+  display: flex;
+  align-items: stretch;
+  height: 76rpx;
+  margin: 12rpx 0;
+}
+
+.stairs {
+  width: 108rpx;
+  margin-right: 12rpx;
+  background-color: #faeeda;
+  border-radius: 10rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stairs-text {
+  font-size: 22rpx;
+  color: #854f0b;
+}
+
+.corridor {
+  flex: 1;
+  background-color: #f1efe8;
+  border-radius: 10rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.corridor-text {
+  font-size: 22rpx;
+  color: #888780;
+  letter-spacing: 8rpx;
+}
+
+/* 底部提示 */
+.floor-tip {
+  margin-top: 24rpx;
+  padding: 20rpx 24rpx;
+  background-color: #e6f1fb;
+  border-radius: 16rpx;
+}
+
+.floor-tip-text {
+  font-size: 26rpx;
+  color: #185fa5;
+  line-height: 1.6;
+}
+
+/* ---------- 按钮 ---------- */
+.actions {
+  margin-top: 32rpx;
+}
+
+.btn-primary {
+  background-color: #185fa5;
+  color: #ffffff;
+  font-size: 30rpx;
+  border-radius: 20rpx;
+  border: none;
+  line-height: 92rpx;
+  height: 92rpx;
+}
+
+.btn-primary::after {
+  border: none;
+}
+
+.pressed {
+  opacity: 0.6;
+}
+
+.footer {
+  margin-top: 20rpx;
+  display: flex;
+  justify-content: center;
+}
+
+.footer-text {
+  font-size: 22rpx;
+  color: #b4b2a9;
+  text-align: center;
+}

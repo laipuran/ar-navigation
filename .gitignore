@@ -14,3 +14,6 @@
 .vscode/*
 !.vscode/extensions.json
 !.vscode/settings.json
+
+# 微信开发者工具个人配置（每台机器不同，不入库）
+miniapp/**/project.private.config.json

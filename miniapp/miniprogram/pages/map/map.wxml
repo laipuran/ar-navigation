@@ -1,0 +1,88 @@
+<!-- map.wxml：三维地图页 -->
+<!-- 分两段：上面校园级地图，下面室内楼层示意 -->
+
+<view class="page">
+
+  <!-- 目标卡片 -->
+  <view class="target-card" wx:if="{{place}}">
+    <view class="target-left">
+      <text class="target-name">{{place.titleText}}</text>
+      <text class="target-sub">{{place.campus}} · {{place.floorText}}</text>
+    </view>
+    <view class="target-badge">
+      <text class="target-badge-text">目标</text>
+    </view>
+  </view>
+
+  <!-- 校园地图；没有坐标时显示提示 -->
+  <block wx:if="{{hasGeo}}">
+    <map
+      class="map"
+      latitude="{{center.lat}}"
+      longitude="{{center.lng}}"
+      scale="17"
+      markers="{{markers}}"
+      polyline="{{polyline}}"
+      enable-zoom
+      enable-scroll
+    />
+    <view class="map-legend">
+      <text class="legend-text">从「{{gateName}}」进校，蓝线为校园段路线 · 示例坐标</text>
+    </view>
+  </block>
+
+  <view class="map-missing" wx:else>
+    <text class="map-missing-text">这栋楼还没有坐标数据，等 GIS 数据接入后显示</text>
+  </view>
+
+  <!-- 室内楼层示意 -->
+  <view class="floor-card" wx:if="{{roomsTop.length > 0}}">
+    <view class="floor-head">
+      <text class="floor-title">{{place.floorText}} 楼层示意</text>
+      <text class="floor-note">非真实平面图</text>
+    </view>
+
+    <!-- 走廊北侧房间 -->
+    <view class="room-row">
+      <view
+        class="room {{item.target ? 'room-target' : ''}}"
+        wx:for="{{roomsTop}}"
+        wx:key="no"
+      >
+        <text class="room-no {{item.target ? 'room-no-target' : ''}}">{{item.no}}</text>
+        <text class="room-tag" wx:if="{{item.target}}">目标</text>
+      </view>
+    </view>
+
+    <!-- 走廊：左侧楼梯 + 走廊通道 -->
+    <view class="corridor-row">
+      <view class="stairs">
+        <text class="stairs-text">楼梯</text>
+      </view>
+      <view class="corridor">
+        <text class="corridor-text">走廊</text>
+      </view>
+    </view>
+
+    <!-- 走廊南侧房间 -->
+    <view class="room-row">
+      <view class="room" wx:for="{{roomsBottom}}" wx:key="no">
+        <text class="room-no">{{item.no}}</text>
+      </view>
+    </view>
+
+    <view class="floor-tip">
+      <text class="floor-tip-text">进门后走东侧楼梯上 {{place.floorText}}，出楼梯右转即是 {{place.roomText}}</text>
+    </view>
+  </view>
+
+  <!-- 操作 -->
+  <view class="actions">
+    <button class="btn-primary" hover-class="pressed" bindtap="onOpenAR">AR 实景指引</button>
+  </view>
+
+  <view class="footer">
+    <text class="footer-text">三维地图需正式主体 + 自建后端，当前为原生方案</text>
+  </view>
+
+</view>
